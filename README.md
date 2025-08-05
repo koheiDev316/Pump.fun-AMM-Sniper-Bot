@@ -4,7 +4,7 @@ Pumpfun sniper with grpc integrated with pumpfun amm. The updated version uses g
 
 ## Contact
 
-- If u have interest or help, contact here telegram: [Telegram](https://t.me/shiny0103)
+- If u have interest or help, contact here telegram: [Telegram](https://t.me/Vlad20316)
 
 ## New updated version 
 
