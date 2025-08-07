@@ -138,6 +138,52 @@ sequenceDiagram
     SolanaRPC-->>-SniperBot: Transaction confirmed
 ```
 
+### `buyToken` Sub-Workflow
+
+The `buyToken` function is the core of the purchasing logic. Here is a more detailed breakdown of its execution:
+
+```mermaid
+sequenceDiagram
+    participant SniperBot as "Sniper Bot (auto/single)"
+    participant buyToken as "buyToken utility"
+    participant SolanaRPC as "Solana RPC Node"
+    participant PumpFun as "Pump.fun On-chain Program"
+    participant SPLToken as "SPL Token Program"
+
+    SniperBot->>+buyToken: Call buyToken(mint, solAmount, slippage, ...)
+
+    buyToken->>+SolanaRPC: getAssociatedTokenAddress(mint, userWallet)
+    SolanaRPC-->>-buyToken: userATA
+    buyToken->>+SolanaRPC: getAccount(userATA)
+    alt userATA does not exist
+        buyToken->>+SPLToken: createAssociatedTokenAccountInstruction(...)
+        SPLToken-->>-buyToken: instruction
+        Note over buyToken: Add instruction to transaction
+    end
+
+    Note over buyToken: getBondingCurvePDA(mint)
+    buyToken->>+SolanaRPC: getAssociatedTokenAddress(mint, bondingCurve)
+    SolanaRPC-->>-buyToken: bondingCurveATA
+
+    buyToken->>+SolanaRPC: getAccountInfo(bondingCurve) with retries
+    SolanaRPC-->>-buyToken: bondingCurveAccountInfo
+
+    Note over buyToken: tokenDataFromBondingCurveTokenAccBuffer(buffer)
+    Note over buyToken: getBuyPrice(solAmount, tokenData)
+    Note over buyToken: Calculate max SOL cost with slippage
+
+    buyToken->>+PumpFun: Build 'buy' instruction with params
+    PumpFun-->>-buyToken: instruction
+    Note over buyToken: Add compute budget instructions
+    Note over buyToken: Add buy instruction to transaction
+
+    buyToken->>+SolanaRPC: sendAndConfirmTransaction(...)
+    SolanaRPC->>+PumpFun: Execute 'buy'
+    SolanaRPC->>+SPLToken: Transfer tokens
+    SolanaRPC-->>-buyToken: Transaction Confirmed (signature)
+    buyToken-->>-SniperBot: Return signature
+```
+
 
 ## 📞 Contact
 
