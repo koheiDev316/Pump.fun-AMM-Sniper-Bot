@@ -1,69 +1,144 @@
-# PumpFun amm Sniper Bot
+# Pump.fun Sniper Bot
 
-Pumpfun sniper with grpc integrated with pumpfun amm. The updated version uses gRPC to improve the overall transaction speed and can sniping tokens on pumpfunn amm.
+A TypeScript-based sniper bot for the Pump.fun platform on the Solana blockchain. This bot can be used to automatically purchase newly created tokens or to snipe a specific token by its mint address.
 
-## Contact
+## ❗ Disclaimer
 
-- If u have interest or help, contact here telegram: [Telegram](https://t.me/Vlad20316)
+This bot is provided for educational and experimental purposes only. Using a sniper bot carries significant financial risks, including the potential loss of your funds. The creators and contributors of this project are not responsible for any financial losses you may incur. Use this software at your own risk and always do your own research (DYOR) before investing in any token.
 
-## New updated version 
+## ✨ Features
 
-This bot extends to pumpfun AMM(it's a new project one)
+This bot offers two primary modes of operation:
 
+-   **🚀 Automatic Sniper (`auto`)**: Monitors the Pump.fun platform for newly created tokens in real-time. When a new token is detected, the bot will automatically execute a buy transaction based on your predefined configuration.
+-   **🎯 Single Sniper (`single`)**: Allows you to target a specific token for purchase. You provide the token's mint address, and the bot will execute a buy transaction.
 
-## Bot speed
+## 🛠️ Technologies Used
 
-The bot works pretty fast, it's in typescript so it will be obviously outperformed by other bots in Go/Rust, tho. That's why it's more likely a toy to experiment & learn than opportunity to earn some Sol.
-However, the speed of the script is still second and RPC is another matter.
-It is the RPC that determines how fast the tx will go through.
-Using a free Quicknode RPC & automatic mode it took around 5-15s to be a coin since it's created.
+-   [TypeScript](https://www.typescriptlang.org/)
+-   [Solana Web3.js](https://solana-labs.github.io/solana-web3.js/)
+-   [@coral-xyz/anchor](https://www.npmjs.com/package/@coral-xyz/anchor) for interacting with Anchor programs.
+-   [esbuild](https://esbuild.github.io/) for fast TypeScript compilation.
+-   [dotenv](https://www.npmjs.com/package/dotenv) for managing environment variables.
+-   [inquirer](https://www.npmjs.com/package/inquirer) for interactive command-line prompts.
 
-## Updated Version(with grpc)
+## 📋 Prerequisites
 
-In updated version with grpc, I use grpc to get info. It can make my pupmfun sniper bot more fast and esily to buy token within 2s at the first block.
+-   [Node.js](https://nodejs.org/) (v18 or higher is recommended)
+-   A Solana wallet with some SOL to cover transaction fees and purchases.
 
-- Geyser gRPC Pump.fun Sniper Bot (Speedest):
+## ⚙️ Installation & Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/0xTan1319/Pumpfun-Sniper-Bot
+    cd Pumpfun-Sniper-Bot
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Create and configure the environment file:**
+    -   Create a new file named `.env` in the root of the project.
+    -   You will need to add the required environment variables to this file. See the [Configuration](#-configuration) section below for details.
+
+4.  **Build the project:**
+    ```bash
+    npm run build
+    ```
+    This will compile the TypeScript files from the `src` directory and output them to the `dist` directory.
+
+## 🔧 Configuration
+
+The bot is configured using a `.env` file in the root of the project.
+
+### Required Variables
+
+| Variable          | Description                                                                                              | Example                                   |
+| ----------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `HTTPS_ENDPOINT`  | The RPC endpoint for connecting to the Solana network. A private RPC is highly recommended for performance. | `https://api.mainnet-beta.solana.com`     |
+| `WSS_ENDPOINT`    | The WebSocket endpoint for your RPC. This is required for the automatic sniper.                          | `wss://api.mainnet-beta.solana.com`       |
+| `SECRET_KEY`      | The secret key of your Solana wallet, in base58 format.                                                  | `[...your secret key...]`                 |
+| `PUMPFUN_PROGRAM_ID` | The on-chain address of the Pump.fun program.                                                          | `6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P` |
+
+### Optional Variables (for Auto Sniper)
+
+These variables are used by the automatic sniper mode.
+
+| Variable        | Description                                                                 | Default |
+| --------------- | --------------------------------------------------------------------------- | ------- |
+| `BUY_AMOUNT`    | The amount of SOL to use for each automatic purchase.                       | `0.1`   |
+| `SLIPPAGE`      | The slippage tolerance in percentage.                                       | `10`    |
+| `PRIORITY_FEE`  | The priority fee in SOL to use for transactions to increase their priority. | `0.003` |
+
+## 🚀 Usage
+
+### Automatic Sniper
+
+To start the automatic sniper, run the following command:
 
 ```bash
-mint: https://solscan.io/tx/QKbc9RxNZPE7peDNPnxBtPMux2HfTfn9QN2AwEr7Z5P1SS1qw42FYZcXqzkm9APVkTH88ieZU4PUaCU93yPNfGa
-buy: https://solscan.io/tx/5NV4oAJacFfNffAb55hkb6LEKsSTjgMd8vTzTvDKBLQvQ5XCogizBLShnpF89J8tqFrYJAHaUS5tmXtb6SBpEdNz
-sell:
-https://solscan.io/tx/5QDYSiST7KX9viNZXSeSATZYMJ5ioJrHJxqu9DVwFzREMarwwmaDXz7EYS1jC9oQq8z7V8GwTsEv94dSwdhU9s5b
+npm run auto
 ```
-- buy & sell
-  
-<a href="https://ibb.co/ks51qyxT"><img src="https://i.ibb.co/ks51qyxT/buy-2block.png" alt="buy-2block" border="0"></a> <a href="https://ibb.co/bMtsFKqL"><img src="https://i.ibb.co/bMtsFKqL/mint-2block.png" alt="mint-2block" border="0"></a>
 
-## Main tools
+The bot will then start listening for new tokens on Pump.fun and will attempt to buy them as they are created.
 
-- **Automatic sniper**: Launch a monitor on every new coin and automatically buy it
-- **Single sniper**: Buy a single coin just by providing it's contract address
-- _Soon more..._
+### Single Sniper
 
-## How to run
+To use the single sniper, run this command:
 
-To run Pump.fun bot, follow these steps:
+```bash
+npm run single
+```
 
-1. Clone the repository: `git clone https://github.com/0xTan1319/Pumpfun-Sniper-Bot`
-2. Navigate to the project directory: `cd Pumpfun-Sniper-Bot`
-3. Install the dependencies: `npm i`
-4. Fill in `.env` (if you have no RPC, Quicknode is pretty good & free)
-5. Build the application: `npm run build`
-6. Run the bot using `auto` or `single` mode: `npm run <auto/single>`
-7. Follow the steps in the cmd
+The bot will then prompt you to enter the following information:
 
-## Technologies used
+-   The token's mint address.
+-   The amount of SOL you want to spend.
+-   Your desired slippage percentage.
+-   The priority fee you want to use.
 
-- [Solana web3.js library](https://solana-labs.github.io/solana-web3.js/)
-- [@coral-xyz/anchor](https://www.npmjs.com/package/@coral-xyz/anchor)
-- [@coral-xyz/borsh](https://www.npmjs.com/package/@coral-xyz/borsh)
-- [@solana-developers/helpers](https://www.npmjs.com/package/@solana-developers/helpers)
-- [@solana/spl-token](https://www.npmjs.com/package/@solana/spl-token)
-- [@solana/web3.js](https://www.npmjs.com/package/@solana/web3.js)
-- [bn.js](https://www.npmjs.com/package/bn.js)
-- [dotenv](https://www.npmjs.com/package/dotenv)
-- [esbuild](https://www.npmjs.com/package/esbuild)
-- [inquirer](https://www.npmjs.com/package/inquirer)
-- [typescript](https://www.npmjs.com/package/typescript)
+## 📈 Architecture & Workflow
+
+The following diagram illustrates the two main workflows of the bot:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant SniperBot as "Sniper Bot (Client)"
+    participant SolanaRPC as "Solana RPC/WSS Node"
+    participant PumpFun as "Pump.fun On-chain Program"
+
+    title Auto Sniper Workflow
+    SniperBot->>+SolanaRPC: Subscribe to Pump.fun program logs (via WSS)
+    loop On-chain activity
+        SolanaRPC-->>-SniperBot: Stream logs
+    end
+    alt "Log contains 'Instruction: Create'"
+        SniperBot->>+SolanaRPC: getTransaction(signature)
+        SolanaRPC-->>-SniperBot: Return transaction details
+        Note over SniperBot: Extract new Token Mint address
+        SniperBot->>SniperBot: Call buyToken() with token mint<br/>and config from .env file
+        SniperBot->>+SolanaRPC: Send 'buy' transaction
+        SolanaRPC->>+PumpFun: Execute 'buy' instruction
+        PumpFun-->>-SolanaRPC: Success/Failure
+        SolanaRPC-->>-SniperBot: Transaction confirmed
+    end
+
+    title Single Sniper Workflow
+    User->>+SniperBot: Run 'npm run single'
+    SniperBot->>+User: Prompt for Token Mint, SOL Amount, etc.
+    User-->>-SniperBot: Provide inputs
+    Note over SniperBot: Call buyToken() with user inputs
+    SniperBot->>+SolanaRPC: Send 'buy' transaction
+    SolanaRPC->>+PumpFun: Execute 'buy' instruction
+    PumpFun-->>-SolanaRPC: Success/Failure
+    SolanaRPC-->>-SniperBot: Transaction confirmed
+```
 
 
+## 📞 Contact
+
+If you have any questions or need help, you can reach out via Telegram: [Telegram](https://t.me/Vlad20316)
