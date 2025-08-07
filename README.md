@@ -100,6 +100,53 @@ The bot will then prompt you to enter the following information:
 -   Your desired slippage percentage.
 -   The priority fee you want to use.
 
+## 🏗️ Project Architecture
+
+The diagram below provides a high-level overview of the project's architecture, showing how the different components interact.
+
+```mermaid
+graph TD
+    subgraph "User"
+        U[User]
+    end
+
+    subgraph "Sniper Bot Project"
+        direction TB
+        subgraph "Setup"
+            A[".env Configuration <br> (RPC, Private Key, etc.)"]
+        end
+
+        subgraph "Core Logic"
+            B["Sniper Modes <br> (autoSniper.ts, singleSniper.ts)"]
+            C["Utility Functions (utils) <br> - buyToken <br> - getPrice <br> - promptUser"]
+            D["Pump.fun Interface (idl) <br> (Anchor IDL & Types)"]
+        end
+
+        B --> C
+        C --> D
+    end
+
+    subgraph "External Systems"
+        direction TB
+        E["Solana Network <br> (RPC/WSS Node)"]
+        F["Pump.fun On-Chain Program"]
+    end
+
+    U -- "Runs 'npm run single' / 'npm run auto'" --> B
+    U -- "Configures" --> A
+
+    A --> B
+
+    B -- "Subscribes to logs (auto) / <br> Gets user input (single)" --> E
+    B -- "Calls buyToken" --> C
+    C -- "Constructs 'buy' transaction" --> D
+    C -- "Sends transaction" --> E
+
+    E -- "Forwards transaction" --> F
+    F -- "Executes logic" --> E
+    E -- "Returns confirmation" --> C
+```
+
 ## 📈 Architecture & Workflow
 
 The following diagram illustrates the two main workflows of the bot:
